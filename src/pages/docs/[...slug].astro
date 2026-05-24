@@ -1,0 +1,128 @@
+---
+import { getCollection } from 'astro:content'
+import Docs from '@/layouts/docs.astro'
+
+const { slug } = Astro.params
+const slugStr = Array.isArray(slug) ? slug.join('/') : slug ?? ''
+
+const allDocs = await getCollection('docs')
+const doc = allDocs.find(d => d.slug === slugStr)
+
+if (!doc) {
+    return Astro.redirect('/')
+}
+
+const grouped = allDocs.reduce((acc, d) => {
+    const category = d.slug.includes('/') ? d.slug.split('/')[0] : 'general'
+
+    if (!acc[category]) acc[category] = []
+
+    acc[category].push(d)
+
+    return acc
+}, {} as Record<string, typeof allDocs>)
+
+for (const cat of Object.values(grouped)) {
+    cat.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
+}
+
+const category = doc.slug.includes('/')
+    ? doc.slug.split('/')[0]
+    : 'general'
+
+const siblings = (grouped[category] ?? []).filter(
+    d => d.data.type === 'guide'
+)
+
+const idx = siblings.findIndex(d => d.slug === doc.slug)
+
+const prev = doc.data.type === 'guide'
+    ? siblings[idx - 1]
+    : undefined
+
+const next = doc.data.type === 'guide'
+    ? siblings[idx + 1]
+    : undefined
+
+const { Content, headings } = await doc.render()
+
+let colors: Array<{ key: string; value: string }> = []
+
+if (doc.slug.endsWith('/colors')) {
+    const response = await fetch(
+        'https://raw.githubusercontent.com/vessel-db/assets/master/COLORS'
+    )
+
+    const text = await response.text()
+
+    colors = text
+        .split('\n')
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => {
+            const [key, value] = line.split('=')
+
+            return {
+                key: key?.trim() ?? '',
+                value: value?.trim() ?? '',
+            }
+        })
+}
+---
+
+<Docs doc={doc} headings={headings} prev={prev} next={next}>
+    <Content />
+
+    {
+        doc.slug.endsWith('/colors') && (
+                    <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {colors.map(color => (
+                                <button
+                                        class="color-copy cursor-pointer group flex items-center gap-3 rounded-lg p-2 transition hover:bg-white/5"
+                                        data-color={color.value}
+                                >
+                                    <div
+                                            class="h-10 w-10 shrink-0 rounded-md border border-(--color-border)"
+                                            style={`background:${color.value}`}
+                                    />
+
+                                    <div class="min-w-0 text-left">
+                                        <div class="truncate font-mono text-sm">
+                                            {color.key}
+                                        </div>
+
+                                        <div
+                                                class="copy-text truncate font-mono text-xs text-zinc-500"
+                                        >
+                                            {color.value}
+                                        </div>
+                                    </div>
+                                </button>
+                        ))}
+                        <script>
+                            document.querySelectorAll('.color-copy').forEach(button => {
+                                button.addEventListener('click', async () => {
+                                    const value = button.dataset.color
+
+                                    if (!value) return
+
+                                    await navigator.clipboard.writeText(value)
+
+                                    const text = button.querySelector('.copy-text')
+
+                                    if (!text) return
+
+                                    const original = text.textContent
+
+                                    text.textContent = 'Copied'
+
+                                    setTimeout(() => {
+                                        text.textContent = original
+                                    }, 1200)
+                                })
+                            })
+                        </script>
+                    </div>
+        )
+    }
+</Docs>

@@ -1,0 +1,106 @@
+---
+import { getCollection } from 'astro:content'
+
+const allDocs = await getCollection('docs')
+const currentPath = Astro.url.pathname
+
+const grouped = allDocs.reduce((acc, doc) => {
+    const parts = doc.slug.split('/')
+    const category = parts.length > 1 ? parts[0] : 'general'
+    if (!acc[category]) acc[category] = []
+    acc[category].push(doc)
+    return acc
+}, {} as Record<string, typeof allDocs>)
+
+for (const cat of Object.values(grouped)) {
+    cat.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
+}
+
+const categoryOrder = ['getting-started', 'panel', 'mast']
+const sortedCategories = [
+    ...categoryOrder.filter(c => grouped[c]),
+    ...Object.keys(grouped).filter(c => !categoryOrder.includes(c)),
+]
+
+
+function formatCategory(slug: string) {
+    return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+---
+
+<aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 w-0 hidden md:flex md:w-65 mt-14
+         border-r border-(--color-border)
+         bg-(--color-background)
+         flex-col">
+
+    <!-- NAV -->
+    <nav class="flex-1 overflow-y-auto px-2 py-4">
+
+        <div class="space-y-6">
+
+            {sortedCategories.map(category => (
+                    <section>
+
+                        <!-- CATEGORY -->
+                        <div class="px-2 mb-2 flex items-center gap-2">
+
+                            <p class="text-sm uppercase tracking-wider text-[var(--color-text-muted)] font-medium">
+                                {formatCategory(category)}
+                            </p>
+                        </div>
+
+                        <!-- LINKS -->
+                        <div class="space-y-1">
+
+                            {grouped[category].map(doc => {
+                                const href = `/docs/${doc.slug}`
+                                const isActive = currentPath === href || currentPath === href + '/'
+
+                                return (
+                                        <a
+                                                href={href}
+                                                class:list={[
+                                                    'group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition',
+                                                    isActive
+                                                        ? 'bg-[var(--color-surface)] text-[var(--color-text-primary)]'
+                                                        : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]'
+                                                ]}>
+
+                                            <i class:list={[
+                                                'fa-solid text-[11px] w-4 text-center',
+                                                doc.data.type === 'guide'
+                                                    ? 'fa-book-open'
+                                                    : 'fa-file-lines'
+                                            ]} />
+
+                                            <span class="truncate">
+                    {doc.data.title}
+                  </span>
+
+                                        </a>
+                                )
+                            })}
+                        </div>
+
+                    </section>
+            ))}
+
+        </div>
+    </nav>
+
+    <!-- FOOTER -->
+    <div class="px-4 py-3 border-t border-(--color-border) shrink-0">
+        <p class="text-[10px] opacity-50 text-(--color-text-muted) text-center m-0" style="font-family: var(--font-sans);">
+            &copy; <span id="year"></span> Vessel &mdash;
+            Powered By
+            <a href="https://atlantisservices.net" target="_blank" rel="noopener noreferrer" class="text-(--color-text-secondary) hover:text-(--color-primary) transition-colors duration-150 no-underline">Atlantis Services</a>
+        </p>
+    </div>
+
+</aside>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear()
+</script>

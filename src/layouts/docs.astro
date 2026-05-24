@@ -1,0 +1,162 @@
+---
+import Sidebar from '@/components/Sidebar.astro'
+import TableOfContents from '@/components/TableOfContents.astro'
+import PrevNext from '@/components/PrevNext.astro'
+import '@/styles/global.css'
+import type { CollectionEntry } from 'astro:content'
+import Navbar from "@/components/Navbar.astro";
+
+interface Props {
+    doc: CollectionEntry<'docs'>
+    headings: { depth: number; slug: string; text: string }[]
+    prev?: CollectionEntry<'docs'>
+    next?: CollectionEntry<'docs'>
+}
+
+const { doc, headings, prev, next } = Astro.props
+const { title, description, type } = doc.data
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — Vessel Wiki</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="flex min-h-screen" style="background: #091525; font-family: 'Geist', sans-serif;">
+
+<Navbar/>
+<Sidebar />
+
+<div class="flex flex-1 md:ml-72 px-10 md:pt-10 pb-12 max-md:px-4">
+
+    <main class="flex-1 flex justify-center px-10 py-12 max-md:px-4 max-md:pt-20">
+        <div class="w-full max-w-[720px] min-w-0">
+
+        <div class="flex items-center gap-2 mb-8 text-xs" style="color: #4a6080; font-family: 'Geist Mono', monospace;">
+            <a href="/docs" class="no-underline transition-colors duration-150 hover:text-[#829fbd]" style="color: #4a6080;">Docs</a>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span style="color: #829fbd;">{title}</span>
+        </div>
+
+        <header class="mb-10 pb-8 border-b border-white/[0.06]">
+            {type === 'guide' && (
+                    <span class="inline-flex items-center gap-1.5 text-[10px] font-medium tracking-widest uppercase px-2.5 py-1 rounded-full border mb-4" style="color: #829fbd; border-color: rgba(130,159,189,0.2); background: rgba(130,159,189,0.07); font-family: 'Geist Mono', monospace;">
+                        <i class="fa-solid fa-list-check text-[8px]"></i>
+                        Guide
+                    </span>
+            )}
+            <h1 class="text-[2.25rem] font-semibold leading-tight tracking-tight mt-2 mb-3" style="color: #f0f4f8; letter-spacing: -0.03em;">{title}</h1>
+            {description && (
+                    <p class="text-base leading-relaxed" style="color: #4a6080;">{description}</p>
+            )}
+        </header>
+
+        <!-- Prose -->
+        <div class="prose">
+            <slot />
+        </div>
+
+        {type === 'guide' && <PrevNext prev={prev} next={next} />}
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
+
+<style>
+    .prose :global(h2) {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #f0f4f8;
+        margin: 2.5rem 0 1rem;
+        letter-spacing: -0.02em;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(130,159,189,0.08);
+    }
+    .prose :global(h3) {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #f0f4f8;
+        margin: 2rem 0 0.75rem;
+    }
+    .prose :global(p) {
+        color: rgba(240,244,248,0.75);
+        margin-bottom: 1.25rem;
+        line-height: 1.75;
+        font-size: 0.9375rem;
+    }
+    .prose :global(ul), .prose :global(ol) {
+        padding-left: 1.5rem;
+        margin-bottom: 1.25rem;
+        color: rgba(240,244,248,0.75);
+        font-size: 0.9375rem;
+        line-height: 1.75;
+    }
+    .prose :global(li) { margin-bottom: 0.4rem; }
+    .prose :global(a) { color: #829fbd; text-decoration: none; border-bottom: 1px solid rgba(130,159,189,0.3); transition: border-color 0.15s; }
+    .prose :global(a:hover) { border-color: #829fbd; }
+    .prose :global(code) {
+        font-family: 'Geist Mono', monospace;
+        font-size: 0.82em;
+        background: rgba(130,159,189,0.08);
+        border: 1px solid rgba(130,159,189,0.12);
+        color: #829fbd;
+        padding: 2px 6px;
+        border-radius: 5px;
+    }
+    .prose :global(pre) {
+        background: #0f1b35;
+        border: 1px solid rgba(130,159,189,0.1);
+        border-radius: 10px;
+        padding: 1.25rem 1.5rem;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+    }
+    .prose :global(pre code) {
+        background: none;
+        border: none;
+        padding: 0;
+        color: rgba(240,244,248,0.85);
+        font-size: 0.85rem;
+        line-height: 1.65;
+    }
+    .prose :global(blockquote) {
+        border-left: 2px solid #829fbd;
+        padding: 0.75rem 1.25rem;
+        margin: 1.5rem 0;
+        background: rgba(130,159,189,0.05);
+        border-radius: 0 8px 8px 0;
+        color: #829fbd;
+        font-size: 0.9375rem;
+    }
+    .prose :global(table) {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        margin: 1.5rem 0;
+    }
+    .prose :global(th) {
+        text-align: left;
+        padding: 0.6rem 1rem;
+        border-bottom: 1px solid rgba(130,159,189,0.12);
+        color: #4a6080;
+        font-weight: 500;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-family: 'Geist Mono', monospace;
+    }
+    .prose :global(td) {
+        padding: 0.65rem 1rem;
+        border-bottom: 1px solid rgba(130,159,189,0.06);
+        color: rgba(240,244,248,0.75);
+    }
+    .prose :global(tr:last-child td) { border-bottom: none; }
+    .prose :global(hr) { border: none; border-top: 1px solid rgba(130,159,189,0.08); margin: 2rem 0; }
+</style>

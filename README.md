@@ -11,4 +11,4 @@ npm run dev
 
 ## Contributing
 
-Documentation lives in `docs/`. Each page is a `.md` or `.mdx` file. Open a PR with your changes and they'll be reviewed before going live.
+Documentation lives in `/src/content/docs/`. Each page is a `.md` or `.mdx` file. Open a PR with your changes and they'll be reviewed before going live.
