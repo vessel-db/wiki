@@ -16,7 +16,7 @@ for (const cat of Object.values(grouped)) {
     cat.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
 }
 
-const categoryOrder = ['getting-started', 'panel', 'mast']
+const categoryOrder = ['information', 'panel', 'mast', 'utils']
 const sortedCategories = [
     ...categoryOrder.filter(c => grouped[c]),
     ...Object.keys(grouped).filter(c => !categoryOrder.includes(c)),
