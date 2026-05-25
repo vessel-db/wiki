@@ -7,6 +7,8 @@ const allPages = allDocs.map(doc => ({
     description: doc.data.description ?? '',
     href: `/docs/${doc.id}`,
 }))
+
+const isDocsActive = Astro.url.pathname.startsWith('/docs')
 ---
 
 <header id="navbar" class="fixed top-0 left-0 right-0 h-14 z-50 flex items-center px-4 border-b border-(--color-border) backdrop-blur-2xl">
@@ -25,7 +27,7 @@ const allPages = allDocs.map(doc => ({
 
     <div class="hidden md:flex items-center gap-1 ml-auto shrink-0">
         <a href="/docs/panel/installation" rel="noopener noreferrer"
-           class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-(--color-text-muted) no-underline transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/3">
+           class=`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-(--color-text-muted) no-underline transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/3 ${isDocsActive ? "bg-white/3" : ""}`>
             <i class="fa-solid fa-book text-[10px]"></i>
             <span>Docs</span>
         </a>
@@ -55,7 +57,7 @@ const allPages = allDocs.map(doc => ({
             <span>Search docs...</span>
             <span class="ml-auto text-[10px] px-1.5 py-0.5 rounded border border-(--color-border) text-(--color-text-muted)">⌘K</span>
         </button>
-        <a href="/docs/panel/installation" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-(--color-text-muted) no-underline transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/5">
+        <a href="/docs/panel/installation" class=`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-(--color-text-muted) no-underline transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/5 ${isDocsActive ? "bg-white/5" : ""}`>
             <i class="fa-solid fa-book text-xs w-4 text-center"></i>
             <span>Docs</span>
         </a>
