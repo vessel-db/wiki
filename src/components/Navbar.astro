@@ -11,23 +11,20 @@ const allPages = allDocs.map(doc => ({
 
 <header id="navbar" class="fixed top-0 left-0 right-0 h-14 z-50 flex items-center px-4 border-b border-(--color-border) backdrop-blur-2xl">
 
-    <!-- Logo -->
     <a href="/" class="flex items-center shrink-0 no-underline sm:w-[260px]">
         <i class="fa-solid fa-anchor text-sm text-(--color-primary) mr-2"></i>
         <span class="text-sm tracking-tight text-(--color-text-primary)">vessel</span>
         <span class="text-[11px] font-medium tracking-widest uppercase text-(--color-text-muted) ml-1" style="font-family: var(--font-mono);">wiki</span>
     </a>
 
-    <!-- Search — hidden on mobile -->
     <div id="search-trigger" class="hidden md:flex items-center gap-2 flex-1 mx-4 ml-auto px-3 py-1.5 rounded-lg border border-(--color-border) cursor-pointer transition-colors duration-150 hover:border-white/15 max-w-sm bg-(--color-card)">
         <i class="fa-solid fa-magnifying-glass text-xs text-(--color-text-muted)"></i>
         <span class="flex-1 text-xs text-(--color-text-muted)">Search docs...</span>
         <span class="text-[10px] px-1.5 py-0.5 rounded border border-(--color-border) text-(--color-text-muted)">⌘K</span>
     </div>
 
-    <!-- Desktop nav links -->
     <div class="hidden md:flex items-center gap-1 ml-auto shrink-0">
-        <a href="/docs" rel="noopener noreferrer"
+        <a href="/docs/panel/installation" rel="noopener noreferrer"
            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-(--color-text-muted) no-underline transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/3">
             <i class="fa-solid fa-book text-[10px]"></i>
             <span>Docs</span>
@@ -44,7 +41,6 @@ const allPages = allDocs.map(doc => ({
         </a>
     </div>
 
-    <!-- Mobile menu button -->
     <div class="flex md:hidden items-center ml-auto">
         <button id="mobile-menu-btn" class="flex items-center justify-center w-8 h-8 rounded-lg text-(--color-text-muted) transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/5" aria-label="Menu">
             <i id="mobile-menu-icon" class="fa-solid fa-bars text-xs"></i>
@@ -52,7 +48,6 @@ const allPages = allDocs.map(doc => ({
     </div>
 </header>
 
-<!-- Mobile dropdown -->
 <div id="mobile-menu" class="fixed top-14 left-0 right-0 z-40 md:hidden border-b border-(--color-border) backdrop-blur-2xl overflow-hidden" style="max-height: 0; transition: max-height 0.2s ease, opacity 0.2s ease; opacity: 0">
     <div class="px-3 py-2 flex flex-col gap-0.5">
         <button id="mobile-search-btn" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-(--color-text-muted) transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/5 text-left">
@@ -60,7 +55,7 @@ const allPages = allDocs.map(doc => ({
             <span>Search docs...</span>
             <span class="ml-auto text-[10px] px-1.5 py-0.5 rounded border border-(--color-border) text-(--color-text-muted)">⌘K</span>
         </button>
-        <a href="/docs" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-(--color-text-muted) no-underline transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/5">
+        <a href="/docs/panel/installation" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-(--color-text-muted) no-underline transition-colors duration-150 hover:text-(--color-text-primary) hover:bg-white/5">
             <i class="fa-solid fa-book text-xs w-4 text-center"></i>
             <span>Docs</span>
         </a>

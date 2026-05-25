@@ -1,7 +1,195 @@
 ---
 import Layout from '@/layouts/layout.astro';
+
+const databases = [
+    { name: 'MySQL',       type: 'Relational', live: true  },
+    { name: 'PostgreSQL',  type: 'Relational', live: true  },
+    { name: 'SQLite',      type: 'Relational', live: true  },
+    { name: 'MongoDB',     type: 'Document',   live: true  },
+    { name: 'Redis',       type: 'Key-value',  live: true  },
+    { name: 'MariaDB',     type: 'Relational', live: false },
+];
+
+const features = [
+    {
+        key: 'Isolated',
+        title: 'Isolated connections',
+        desc: 'Keep dev, staging, and prod separate. Everything is scoped per database and never shared.',
+    },
+    {
+        key: 'Networking',
+        title: 'Simple to connect',
+        desc: 'Connect over localhost, a private IP, or an SSH tunnel. No VPN setup, no firewall rules to learn.',
+    },
+    {
+        key: 'Data explorer',
+        title: 'Coming soon',
+        desc: 'Browse Redis pub/sub channels, MongoDB collections and documents, MySQL and PostgreSQL tables — all from one place.',
+        soon: true,
+    },
+    {
+        key: 'Query editor',
+        title: 'Write queries directly',
+        desc: 'SQL and NoSQL query editor with syntax highlighting, history, and export.',
+    },
+    {
+        key: 'Backups',
+        title: 'Scheduled dumps',
+        desc: 'Schedule and download database snapshots from the UI. No cron jobs needed.',
+    },
+    {
+        key: 'Privacy',
+        title: 'Fully self-contained',
+        desc: 'No telemetry. No accounts. Your data stays on your machine.',
+    },
+];
+
+const installSteps = [
+    'git clone https://github.com/vessel-db/panel.git /var/www/vessel',
+    'cd /var/www/vessel && npm install && npm run build',
+    'pm2 start dist/server/entry.mjs --name vessel',
+];
+
 ---
 
 <Layout>
-    Home
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Geist:wght@300;400;500;600&display=swap');
+        .font-display  { font-family: 'Instrument Serif', Georgia, serif; }
+        .font-geist    { font-family: 'Geist', sans-serif; }
+        .font-mono     { font-family: 'Geist Mono', monospace; }
+        .italic-accent { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--color-primary); }
+        .fade-rule {
+            border: none; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-border) 20%, var(--color-border) 80%, transparent);
+        }
+    </style>
+
+    <div class="min-h-screen pt-14">
+
+        <section class="max-w-3xl mx-auto px-8 pt-24 pb-20">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-(--color-border) text-[11px] uppercase tracking-widest mb-8 font-mono" style="background: var(--color-surface); color: var(--color-text-muted);">
+                <span class="w-1.5 h-1.5 rounded-full bg-(--color-primary) inline-block"></span>
+                MIT licensed
+            </div>
+
+            <h1 class="font-display text-[clamp(2.6rem,5.5vw,4rem)] leading-[1.1] tracking-tight text-(--color-text-primary) font-normal mb-6">
+                You already own the hardware.<br>
+                <span class="italic-accent">Why pay for database hosting?</span>
+            </h1>
+
+            <p class="font-geist text-[15px] leading-[1.75] font-light max-w-md mb-10" style="color: var(--color-text-muted);">
+                Vessel is a self-hosted database management panel. Run it on your own server. Free, open source, forever.
+            </p>
+
+            <div class="flex items-center gap-2.5 flex-wrap">
+                <a href="/docs/panel/installation"
+                   class="font-geist inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-[13px] font-medium no-underline tracking-tight transition-opacity duration-150 hover:opacity-85"
+                   style="background: var(--color-primary); color: var(--color-background);">
+                    Get started
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
+                <a href="https://github.com/vessel-db" target="_blank" rel="noopener noreferrer"
+                   class="font-geist inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-[13px] font-normal no-underline border border-(--color-border) tracking-tight transition-all duration-150 hover:border-white/20 hover:text-(--color-text-primary)"
+                   style="color: var(--color-text-muted);">
+                    <i class="fa-brands fa-github text-[12px]"></i>
+                    GitHub
+                </a>
+            </div>
+        </section>
+
+        <hr class="fade-rule mx-8" />
+
+        <section class="max-w-3xl mx-auto px-8 py-16">
+            <p class="font-mono text-[11px] uppercase tracking-[0.1em] mb-8" style="color: var(--color-text-muted);">Supported databases</p>
+
+            <div class="flex flex-col border border-(--color-border) rounded-xl overflow-hidden divide-y divide-(--color-border)">
+                {databases.map(db => (
+                        <div class:list={["flex items-center justify-between px-5 py-4", !db.live && "opacity-40"]}>
+                            <div class="flex items-center gap-4">
+                        <span class:list={[
+                            "w-1.5 h-1.5 rounded-full shrink-0",
+                            db.live ? "bg-(--color-primary)" : "bg-(--color-text-muted)"
+                        ]}></span>
+                                <span class="font-geist text-[13px] font-medium tracking-tight" style="color: var(--color-text-primary);">
+                            {db.name}
+                        </span>
+                            </div>
+                            <div class="hidden sm:flex items-center gap-4">
+                        <span class="font-mono text-[10px] uppercase tracking-[0.06em]" style="color: var(--color-text-muted);">
+                            {db.type}
+                        </span>
+                                {!db.live && (
+                                        <span class="font-mono text-[9px] uppercase tracking-[0.06em] px-2 py-0.5 rounded border border-(--color-border)" style="color: var(--color-text-muted);">
+                                soon
+                            </span>
+                                )}
+                            </div>
+                        </div>
+                ))}
+            </div>
+        </section>
+
+        <hr class="fade-rule mx-8" />
+
+        <section class="max-w-3xl mx-auto px-8 py-16">
+            <p class="font-mono text-[11px] uppercase tracking-[0.1em]" style="color: var(--color-text-muted);">What's included</p>
+
+            <div class="divide-y divide-(--color-border)">
+                {features.map(f => (
+                        <div class="flex flex-col sm:grid grid-cols-[140px_1fr] gap-8 py-5">
+                            <div class="font-mono text-[12px] tracking-[0.02em] pt-px" style="color: var(--color-text-muted);">{f.key}</div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-geist text-[13px] font-medium tracking-tight" style="color: var(--color-text-primary);">{f.title}</span>
+                                    {f.soon && (
+                                            <span class="font-mono text-[9px] uppercase tracking-[0.06em] px-1.5 py-0.5 rounded border border-(--color-border)" style="color: var(--color-text-muted);">soon</span>
+                                    )}
+                                </div>
+                                <p class="font-geist text-[13px] leading-[1.65] font-light m-0" style="color: var(--color-text-muted);">{f.desc}</p>
+                            </div>
+                        </div>
+                ))}
+            </div>
+        </section>
+
+        <hr class="fade-rule mx-8" />
+
+        <section class="max-w-3xl mx-auto px-8 py-16">
+            <p class="font-mono text-[11px] uppercase tracking-[0.1em] mb-6" style="color: var(--color-text-muted);">Installation</p>
+
+            <div class="rounded-xl border border-(--color-border) px-6 py-5 flex flex-col gap-1.5" style="background: var(--color-surface);">
+                {installSteps.map(cmd => (
+                        <div class="font-mono text-[12.5px] leading-[1.9] truncate">
+                            <span style="color: #3a5270; user-select: none;">$ </span>
+                            <span style="color: var(--color-text-primary);">{cmd}</span>
+                        </div>
+                ))}
+            </div>
+
+            <p class="font-geist text-[12px] font-light mt-3" style="color: var(--color-text-muted);">
+                Requires Node.js v18+. See the <a href="/docs/panel/installation" class="no-underline hover:underline" style="color: var(--color-primary);">full installation guide</a> for web server configuration.
+            </p>
+        </section>
+
+        <footer class="border-t border-(--color-border) px-8 py-7 mt-10">
+            <div class="max-w-3xl mx-auto flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="font-mono text-[12px]" style="color: var(--color-text-muted);">
+                                    &copy; <span id="year"></span> Vessel &mdash;
+            Powered By
+            <a href="https://atlantisservices.net" target="_blank" rel="noopener noreferrer" class="text-(--color-text-secondary) hover:text-(--color-primary) transition-colors duration-150 no-underline">Atlantis Services</a>
+                    </span>
+                </div>
+                <span class="font-mono text-[11px]" style="color: var(--color-text-muted);">MIT License</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear()
+    </script>
+
 </Layout>

@@ -35,7 +35,6 @@ function formatCategory(slug: string) {
          bg-(--color-background)
          flex-col">
 
-    <!-- NAV -->
     <nav class="flex-1 overflow-y-auto px-2 py-4">
 
         <div class="space-y-6">
@@ -43,7 +42,6 @@ function formatCategory(slug: string) {
             {sortedCategories.map(category => (
                     <section>
 
-                        <!-- CATEGORY -->
                         <div class="px-2 mb-2 flex items-center gap-2">
 
                             <p class="text-sm tracking-wider text-[var(--color-text-muted)] font-medium">
@@ -51,7 +49,6 @@ function formatCategory(slug: string) {
                             </p>
                         </div>
 
-                        <!-- LINKS -->
                         <div class="space-y-1">
 
                             {grouped[category].map(doc => {
@@ -90,7 +87,6 @@ function formatCategory(slug: string) {
         </div>
     </nav>
 
-    <!-- FOOTER -->
     <div class="px-4 py-3 border-t border-(--color-border) shrink-0">
         <p class="text-[10px] opacity-50 text-(--color-text-muted) text-center m-0" style="font-family: var(--font-sans);">
             &copy; <span id="year"></span> Vessel &mdash;
