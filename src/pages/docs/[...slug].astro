@@ -1,19 +1,19 @@
 ---
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import Docs from '@/layouts/docs.astro'
 
 const { slug } = Astro.params
 const slugStr = Array.isArray(slug) ? slug.join('/') : slug ?? ''
 
 const allDocs = await getCollection('docs')
-const doc = allDocs.find(d => d.slug === slugStr)
+const doc = allDocs.find(d => d.id === slugStr)
 
 if (!doc) {
     return Astro.redirect('/')
 }
 
 const grouped = allDocs.reduce((acc, d) => {
-    const category = d.slug.includes('/') ? d.slug.split('/')[0] : 'general'
+    const category = d.id.includes('/') ? d.id.split('/')[0] : 'general'
 
     if (!acc[category]) acc[category] = []
 
@@ -26,15 +26,15 @@ for (const cat of Object.values(grouped)) {
     cat.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
 }
 
-const category = doc.slug.includes('/')
-    ? doc.slug.split('/')[0]
+const category = doc.id.includes('/')
+    ? doc.id.split('/')[0]
     : 'general'
 
 const siblings = (grouped[category] ?? []).filter(
     d => d.data.type === 'guide'
 )
 
-const idx = siblings.findIndex(d => d.slug === doc.slug)
+const idx = siblings.findIndex(d => d.id === doc.id)
 
 const prev = doc.data.type === 'guide'
     ? siblings[idx - 1]
@@ -44,11 +44,11 @@ const next = doc.data.type === 'guide'
     ? siblings[idx + 1]
     : undefined
 
-const { Content, headings } = await doc.render()
+const { Content, headings } = await render(doc)
 
 let colors: Array<{ key: string; value: string }> = []
 
-if (doc.slug.endsWith('/colors')) {
+if (doc.id.endsWith('/colors')) {
     const response = await fetch(
         'https://raw.githubusercontent.com/vessel-db/assets/master/COLORS'
     )
@@ -74,7 +74,7 @@ if (doc.slug.endsWith('/colors')) {
     <Content />
 
     {
-        doc.slug.endsWith('/colors') && (
+        doc.id.endsWith('/colors') && (
                     <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         {colors.map(color => (
                                 <button

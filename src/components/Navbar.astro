@@ -5,7 +5,7 @@ const allDocs = await getCollection('docs')
 const allPages = allDocs.map(doc => ({
     title: doc.data.title,
     description: doc.data.description ?? '',
-    href: `/docs/${doc.slug}`,
+    href: `/docs/${doc.id}`,
 }))
 ---
 
