@@ -13,7 +13,7 @@ const { prev, next } = Astro.props
 <nav class="mt-12 pt-6 border-t border-white/[0.06]">
     <div class="flex justify-between gap-4">
         {prev ? (
-                <a href={`/docs/${prev.slug}`} class="group flex flex-col gap-1 px-5 py-4 rounded-xl border border-white/[0.07] no-underline min-w-0 max-w-[48%] transition-all duration-150 hover:border-[rgba(130,159,189,0.25)] hover:bg-white/[0.02]" style="background: rgba(15,27,53,0.6);">
+                <a href={`/docs/${prev.id}`} class="group flex flex-col gap-1 px-5 py-4 rounded-xl border border-white/[0.07] no-underline min-w-0 max-w-[48%] transition-all duration-150 hover:border-[rgba(130,159,189,0.25)] hover:bg-white/[0.02]" style="background: rgba(15,27,53,0.6);">
                     <span class="flex items-center gap-1.5 text-[11px] font-medium" style="color: #4a6080; font-family: 'Geist Mono', monospace;">
                         <i class="fa-solid fa-arrow-left text-[9px]"></i>
                         Previous
@@ -23,7 +23,7 @@ const { prev, next } = Astro.props
         ) : <div />}
 
         {next ? (
-                <a href={`/docs/${next.slug}`} class="group flex flex-col gap-1 px-5 py-4 rounded-xl border border-white/[0.07] no-underline min-w-0 max-w-[48%] text-right ml-auto transition-all duration-150 hover:border-[rgba(130,159,189,0.25)] hover:bg-white/[0.02]" style="background: rgba(15,27,53,0.6);">
+                <a href={`/docs/${next.id}`} class="group flex flex-col gap-1 px-5 py-4 rounded-xl border border-white/[0.07] no-underline min-w-0 max-w-[48%] text-right ml-auto transition-all duration-150 hover:border-[rgba(130,159,189,0.25)] hover:bg-white/[0.02]" style="background: rgba(15,27,53,0.6);">
                     <span class="flex items-center justify-end gap-1.5 text-[11px] font-medium" style="color: #4a6080; font-family: 'Geist Mono', monospace;">
                         Next
                         <i class="fa-solid fa-arrow-right text-[9px]"></i>
