@@ -1,10 +1,10 @@
 ---
 import Sidebar from '@/components/Sidebar.astro'
-import TableOfContents from '@/components/TableOfContents.astro'
 import PrevNext from '@/components/PrevNext.astro'
 import '@/styles/global.css'
 import type { CollectionEntry } from 'astro:content'
 import Navbar from "@/components/Navbar.astro";
+import SEO from '@/components/SEO.astro';
 
 interface Props {
     doc: CollectionEntry<'docs'>
@@ -26,6 +26,8 @@ const { title, description, type } = doc.data
     {description && <meta name="description" content={description} />}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <SEO title={title} description={description} />
 </head>
 <body class="flex min-h-screen" style="background: #091525; font-family: 'Geist', sans-serif;">
 
