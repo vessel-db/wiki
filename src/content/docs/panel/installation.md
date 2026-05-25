@@ -10,7 +10,7 @@ Vessel is designed to run on your own web server. You will need root access to y
 ## Requirements
 
 - Node.js `v18` or higher
-- A web server (Nginx, Apache, or Caddy)
+- A web server (Nginx, Apache, Caddy) or Cloudflared
 - A domain or subdomain pointed at your server
 
 ## Installing Node.js
